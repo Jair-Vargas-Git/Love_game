@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Misión: Te Amo</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background-color: #ffeef8;
+      text-align: center;
+      padding: 2rem;
+      color: #333;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      padding: 1rem 2rem;
+      background-color: #ff8ba7;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 10px;
+      margin: 1rem;
+      position: relative;
+    }
+    img {
+      max-width: 300px;
+      margin-top: 1rem;
+      border-radius: 10px;
+    }
+    .final-text {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    #no-btn {
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pantalla-inicio">
+    <h1>¿Aceptarás esta misión secreta de amor?</h1>
+    <button onclick="mostrarPregunta(0)">¡Acepto!</button>
+  </div>
+
+  <div id="preguntas-container" class="hidden">
+    <h2 id="pregunta"></h2>
+    <button id="respuesta1"></button>
+    <button id="respuesta2"></button>
+    <div id="imagen-pregunta" class="hidden">
+      <img id="imagen-display" src="" alt="Imagen relacionada" />
+    </div>
+  </div>
+
+  <div id="pantalla-tacos" class="hidden">
+    <h2>Tu risa compila mi existencia.</h2>
+    <p>(espero no caer en cliché)</p>
+    <h3>¿Jalas a unos tacos conmigo?</h3>
+    <button onclick="mostrarCupon()">¡Sí 😍</button>
+    <button id="no-btn" onmouseover="mueveNo()">No 🙄</button>
+  </div>
+
+  <div id="pantalla-final" class="hidden">
+    <h2>¡Cupón desbloqueado! 🌮</h2>
+    <img src="cupon-tacos.jpg" alt="Cupón válido por unos taquitos" />
+    <div class="final-text">Válido solo si vienes conmigo.</div>
+  </div>
+
+  <script>
+    const preguntas = [
+      {
+        texto: "¿Cual fue el nombre de la obra de teatro que vimos el día que te pedí fuéramos novios?",
+        correcta: "El escuadrón de la muerte",
+        incorrecta: "El escuadrón suicida",
+        imagen: "obra.jpg"
+      },
+      {
+        texto: "¿Cual era el color de los tennis convers que tenías puestos el día que nos conocimos?",
+        correcta: "guinda",
+        incorrecta: "negro",
+        imagen: "tenis.jpg"
+      },
+      {
+        texto: "¿Lugar donde jugamos una apuesta para conocernos mejor?",
+        correcta: "El Billar",
+        incorrecta: "En el campo de futbol",
+        imagen: "billar.jpg"
+      },
+      {
+        texto: "¿Cancion que bailamos en boda?",
+        correcta: "Married life piano versión",
+        incorrecta: "Una aventura al cielo piano versión",
+        imagen: "boda.jpg"
+      },
+      {
+        texto: "¿Primera playa que fuimos juntos?",
+        correcta: "Tecolutla Veracruz",
+        incorrecta: "Poza Rica Veracruz",
+        imagen: "playa.jpg"
+      },
+      {
+        texto: "¿Color de vestido de tu disfraz de brujita usado en 2009?",
+        correcta: "Azul con saco negro",
+        incorrecta: "Rojo con saco negro",
+        imagen: "brujita.jpg"
+      }
+    ];
+
+    let indicePregunta = 0;
+
+    function mostrarPregunta(indice) {
+      document.getElementById('pantalla-inicio').classList.add('hidden');
+      document.getElementById('pantalla-tacos').classList.add('hidden');
+      document.getElementById('preguntas-container').classList.remove('hidden');
+
+      const pregunta = preguntas[indice];
+      document.getElementById('pregunta').textContent = pregunta.texto;
+      const respuestas = shuffle([pregunta.correcta, pregunta.incorrecta]);
+
+      document.getElementById('respuesta1').textContent = respuestas[0];
+      document.getElementById('respuesta1').onclick = () => validarRespuesta(respuestas[0] === pregunta.correcta);
+
+      document.getElementById('respuesta2').textContent = respuestas[1];
+      document.getElementById('respuesta2').onclick = () => validarRespuesta(respuestas[1] === pregunta.correcta);
+    }
+
+    function validarRespuesta(esCorrecta) {
+      if (esCorrecta) {
+        const img = document.getElementById('imagen-display');
+        img.src = preguntas[indicePregunta].imagen;
+        document.getElementById('imagen-pregunta').classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('imagen-pregunta').classList.add('hidden');
+          indicePregunta++;
+          if (indicePregunta < preguntas.length) {
+            mostrarPregunta(indicePregunta);
+          } else {
+            document.getElementById('preguntas-container').classList.add('hidden');
+            document.getElementById('pantalla-tacos').classList.remove('hidden');
+          }
+        }, 2000);
+      } else {
+        alert('Respuesta incorrecta :( volvamos a empezar');
+        location.reload();
+      }
+    }
+
+    function mostrarCupon() {
+      document.getElementById('pantalla-tacos').classList.add('hidden');
+      document.getElementById('pantalla-final').classList.remove('hidden');
+    }
+
+    function mueveNo() {
+      const btn = document.getElementById('no-btn');
+      const x = Math.floor(Math.random() * 80);
+      const y = Math.floor(Math.random() * 60);
+      btn.style.top = y + 'vh';
+      btn.style.left = x + 'vw';
+    }
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+  </script>
+</body>
+</html>
